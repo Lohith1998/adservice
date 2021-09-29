@@ -37,3 +37,17 @@ stages:
         command: 'Push an image'
         imageName: '$(ImageName)'
       condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    
+    - task: AzureResourceManagerTemplateDeployment@3
+      displayName: 'Create Storage Account'
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'Training-rg-sc'
+        subscriptionId: '44e26024-4977-4419-8d23-0e1e22e8804e'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: 'Training-rg'
+        location: 'Central India'
+        templateLocation: 'Linked artifact'
+        csmFile: 'ARMTemplate/template.json'
+        csmParametersFile: 'ARMTemplate/parameter.json'
+        deploymentMode: 'Incremental'
